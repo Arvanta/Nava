@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نوا | Nava</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📻</text></svg>">
+    
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-color: #1e293b;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger-color: #ef4444;
+            --success-color: #10b981;
+            --panel-bg: #111827;
+            --border-color: #334155;
+            --warning-color: #f59e0b;
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f1f5f9;
+            --card-color: #ffffff;
+            --text-color: #0f172a;
+            --text-muted: #64748b;
+            --panel-bg: #f8fafc;
+            --border-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Vazirmatn, system-ui, sans-serif;
+            transition: background-color 0.2s, border-color 0.2s, color 0.1s;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--card-color);
+            width: 100%;
+            max-width: 560px;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 700px; /* App height increased by 100px */
+        }
+
+        body.ltr-mode { direction: ltr; }
+        body.ltr-mode input[type="range"] { direction: ltr; }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header h1 { font-size: 18px; }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: var(--border-color);
+            color: var(--text-color);
+            border: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .icon-btn:hover { background: var(--accent-color); color: white; }
+
+        .manage-panel {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            border: 1px solid var(--border-color);
+            max-height: 320px;
+            overflow-y: auto;
+        }
+
+        .manage-panel h3 { font-size: 13px; color: var(--accent-color); }
+
+        .form-row { display: flex; gap: 6px; }
+
+        input[type="text"], select {
+            background-color: var(--card-color);
+            border: 1px solid var(--border-color);
+            padding: 6px 10px;
+            border-radius: 6px;
+            color: var(--text-color);
+            font-size: 12px;
+            outline: none;
+            flex-grow: 1;
+        }
+        input[type="text"]:focus, select:focus { border-color: var(--accent-color); }
+
+        .action-mini-btn {
+            background: var(--success-color);
+            border: none; color: white; padding: 6px 12px;
+            border-radius: 6px; cursor: pointer; font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .backup-zone {
+            display: flex;
+            gap: 8px;
+            margin-top: 2px;
+        }
+        .backup-btn {
+            background: var(--border-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            justify-content: center;
+        }
+        .backup-btn:hover {
+            background: var(--card-color);
+            border-color: var(--accent-color);
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .tabs-container::-webkit-scrollbar { height: 4px; }
+        .tabs-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+
+        .tab-btn {
+            background: var(--panel-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tab-btn.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+        .tab-btn .delete-cat-icon { color: inherit; opacity: 0.6; }
+        .tab-btn .delete-cat-icon:hover { color: var(--danger-color); opacity: 1; }
+
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .station-list { list-style: none; }
+
+        .station-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            background-color: var(--panel-bg);
+            margin-bottom: 6px;
+            border-radius: 8px;
+            border: 1px solid transparent;
+        }
+        .station-item.active-playing {
+            border-color: var(--accent-color);
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .station-info {
+            cursor: pointer;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fav-star { color: var(--text-muted); cursor: pointer; }
+        .fav-star.active { color: #eab308; }
+
+        .item-actions button {
+            background: none; border: none; color: var(--text-muted);
+            cursor: pointer; padding: 4px; font-size: 12px;
+        }
+        .item-actions button.edit:hover { color: var(--accent-color); }
+        .item-actions button.delete:hover { color: var(--danger-color); }
+
+        input[type="range"] {
+            direction: ltr;
+            accent-color: var(--accent-color);
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .bottom-player {
+            background: var(--panel-bg);
+            padding: 14px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .playing-name { font-weight: bold; font-size: 14px; color: var(--accent-color); }
+        .status-badge { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;}
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #64748b; }
+        .status-dot.playing { background: var(--success-color); }
+        .status-dot.loading { background: #f59e0b; }
+        .status-dot.error { background: var(--danger-color); }
+
+        .meta-info {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            min-height: 18px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .controls-inline-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: space-between;
+        }
+
+        .control-sub-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .timeline-container {
+            flex-grow: 2;
+        }
+        .timeline-container input { width: 100%; min-width: 130px; }
+        .time-text { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+
+        .volume-container {
+            flex-grow: 1;
+            max-width: 140px;
+        }
+        .volume-container input { width: 100%; }
+
+        .player-action-btn {
+            background: var(--border-color);
+            color: var(--text-color);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .player-action-btn:hover { background: var(--accent-color); color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1 id="app-title"><i class="fa-solid fa-radio"></i> نوا</h1>
+        <div class="header-actions">
+            <button class="icon-btn" onclick="toggleLang()" id="lang-toggle-btn" title="Change Language">EN</button>
+            <a class="icon-btn" href="https://github.com/Arvanta/Nava" target="_blank" id="github-link" title="GitHub Repository"><i class="fa-brands fa-github"></i></a>
+            <button class="icon-btn" onclick="toggleTheme()" id="theme-toggle-btn" title="تغییر پوسته"><i class="fa-solid fa-moon"></i></button>
+            <button class="icon-btn" onclick="toggleManagePanel()" id="manage-toggle-btn" title="مدیریت رادیو"><i class="fa-solid fa-plus"></i></button>
+        </div>
+    </header>
+
+    <div class="manage-panel" id="manage-panel">
+        <div>
+            <h3 id="chan-form-title"><i class="fa-solid fa-square-plus"></i> افزودن کانال جدید</h3>
+            <input type="hidden" id="chan-edit-id">
+            <div class="form-row" style="margin-top: 4px; margin-bottom: 6px;">
+                <input type="text" id="chan-name" placeholder="نام کانال">
+                <select id="chan-category"></select>
+            </div>
+            <div class="form-row">
+                <input type="text" id="chan-url" placeholder="آدرس استریم URL">
+                <button class="action-mini-btn" id="chan-save-btn" onclick="saveChannel()">ذخیره کانال</button>
+            </div>
+            <button id="cancel-chan-edit" style="background:none; border:none; color:var(--danger-color); font-size:11px; cursor:pointer; display:none; margin-top:5px;" onclick="resetChannelForm()">انصراف از ویرایش</button>
+        </div>
+        
+        <hr style="border: 0; border-top: 1px solid var(--border-color);">
+        
+        <div>
+            <h3 id="cat-form-title"><i class="fa-solid fa-folder-plus"></i> افزودن دسته جدید</h3>
+            <div class="form-row" style="margin-top: 4px;">
+                <input type="text" id="category-name" placeholder="نام دسته (مثلاً: ورزشی، موزیک)">
+                <button class="action-mini-btn" id="cat-save-btn" onclick="saveCategory()">ذخیره دسته</button>
+            </div>
+        </div>
+        
+        <hr style="border: 0; border-top: 1px solid var(--border-color);">
+        
+        <div>
+            <h3 id="backup-form-title"><i class="fa-solid fa-floppy-disk"></i> پشتیبان‌گیری از اطلاعات</h3>
+            <div class="backup-zone" style="margin-top: 4px;">
+                <button class="backup-btn" id="export-btn" onclick="exportBackup()"><i class="fa-solid fa-download" style="color:var(--success-color);"></i> دانلود فایل پشتیبان</button>
+                <button class="backup-btn" id="import-btn" onclick="document.getElementById('import-file-input').click()"><i class="fa-solid fa-upload" style="color:var(--accent-color);"></i> بارگذاری فایل پشتیبان</button>
+                <input type="file" id="import-file-input" accept=".json" style="display:none;" onchange="importBackup(this)">
+            </div>
+        </div>
+    </div>
+
+    <div class="tabs-container" id="tabs-container"></div>
+
+    <div class="main-content">
+        <ul class="station-list" id="station-list-container"></ul>
+    </div>
+
+    <div class="bottom-player">
+        <div class="player-header">
+            <div class="playing-name" id="track-title">کانالی انتخاب نشده است</div>
+            <div class="status-badge">
+                <span id="status-text">آماده</span>
+                <div id="status-indicator" class="status-dot"></div>
+            </div>
+        </div>
+
+        <div class="meta-info" id="meta-text">انتخاب کانال برای پخش...</div>
+
+        <div class="controls-inline-row">
+            <div class="control-sub-group timeline-container">
+                <span class="time-text" id="time-current">00:00</span>
+                <input type="range" id="seek-slider" min="0" max="0" value="0" onchange="seekAudio(this.value)">
+                <span class="time-text" id="time-duration">00:00</span>
+                <button id="master-play-btn" class="player-action-btn" onclick="togglePlayback()"><i class="fa-solid fa-play"></i></button>
+            </div>
+
+            <div class="control-sub-group volume-container">
+                <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)">
+                <button id="mute-btn" class="player-action-btn" onclick="toggleMute()"><i class="fa-solid fa-volume-high"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const audio = new Audio();
+    let currentLang = 'fa';
+    let currentStation = null;
+    let activeTabId = 'cat-all';
+
+    // Localization vocabulary
+    const i18n = {
+        fa: {
+            appTitle: '<i class="fa-solid fa-radio"></i> نوا',
+            noStation: 'کانالی انتخاب نشده است',
+            selectStation: 'انتخاب کانال برای پخش...',
+            statusReady: 'آماده',
+            statusBuffering: 'در حال بافر...',
+            statusPlaying: 'زنده',
+            statusPaused: 'متوقف شد',
+            statusError: 'خطای اتصال!',
+            metaConnecting: 'در حال برقراری ارتباط...',
+            metaBuffering: 'در حال دریافت داده‌های صوتی...',
+            metaPlaying: 'در حال پخش استریم زنده...',
+            metaError: 'برقراری ارتباط با استریم صوتی ناموفق بود (آدرس منبع را بررسی کنید).',
+            metaPlayingTrack: 'در حال پخش: ',
+            allChannels: 'همه کانال‌ها',
+            radioNational: 'موسیقی',
+            uncategorized: 'دسته‌بندی نشده',
+            noStationFound: 'ایستگاه رادیویی در این مجموعه یافت نشد.',
+            chanFormTitle: '<i class="fa-solid fa-square-plus"></i> افزودن کانال جدید',
+            chanFormTitleEdit: 'ویرایش کانال: ',
+            chanNamePlaceholder: 'نام کانال',
+            chanUrlPlaceholder: 'آدرس استریم URL',
+            chanSaveBtn: 'ذخیره کانال',
+            chanCancelEdit: 'انصراف از ویرایش',
+            catFormTitle: '<i class="fa-solid fa-folder-plus"></i> افزودن دسته جدید',
+            catNamePlaceholder: 'نام دسته (مثلاً: ورزشی، موزیک)',
+            catSaveBtn: 'ذخیره دسته',
+            backupFormTitle: '<i class="fa-solid fa-floppy-disk"></i> پشتیبان‌گیری از اطلاعات',
+            exportBtn: '<i class="fa-solid fa-download" style="color:var(--success-color);"></i> دانلود فایل پشتیبان',
+            importBtn: '<i class="fa-solid fa-upload" style="color:var(--accent-color);"></i> بارگذاری فایل پشتیبان',
+            alertFillFields: 'تکمیل فیلدهای نام فرکانس و آدرس منبع الزامی است.',
+            alertBackupSuccess: 'داده‌های پشتیبان با موفقیت بازیابی و اعمال شدند.',
+            alertBackupInvalid: 'ساختار فایل انتخاب‌شده معتبر نیست.',
+            alertBackupError: 'خطا در بارگذاری فایل. لطفاً از صحت فرمت داده‌ها اطمینان حاصل کنید.',
+            alertSelectChannel: 'لطفاً ابتدا فرکانس مورد نظر خود را از لیست انتخاب کنید.',
+            confirmDelCat: 'هشدار سیستم:\nآیا از حذف مجموعه {name} اطمینان دارید؟\nبا تایید این عملیات، ایستگاه‌های زیرمجموعه آن حذف نشده و به بخش "دسته‌بندی نشده" منتقل خواهند شد.',
+            confirmDelChan: 'تایید حذف ایستگاه:\nآیا مایلید فرکانس رادیویی {name} را برای همیشه از لیست شبکه‌ها حذف کنید؟\nاین عملیات غیرقابل بازگشت است.',
+            toolTipEdit: 'ویرایش فرکانس',
+            toolTipDelete: 'حذف فرکانس',
+            toolTipDelCat: 'حذف دسته'
+        },
+        en: {
+            appTitle: '<i class="fa-solid fa-radio"></i> Nava',
+            noStation: 'No Channel Selected',
+            selectStation: 'Select a channel to play...',
+            statusReady: 'Ready',
+            statusBuffering: 'Buffering...',
+            statusPlaying: 'Live',
+            statusPaused: 'Paused',
+            statusError: 'Error!',
+            metaConnecting: 'Connecting...',
+            metaBuffering: 'Receiving audio data...',
+            metaPlaying: 'Streaming live content...',
+            metaError: 'Connection to stream failed (Check URL resource).',
+            metaPlayingTrack: 'Now Playing: ',
+            allChannels: 'All Channels',
+            radioNational: 'Music',
+            uncategorized: 'Uncategorized',
+            noStationFound: 'No stations found in this category.',
+            chanFormTitle: '<i class="fa-solid fa-square-plus"></i> Add New Channel',
+            chanFormTitleEdit: 'Edit Channel: ',
+            chanNamePlaceholder: 'Channel Name',
+            chanUrlPlaceholder: 'Stream URL Address',
+            chanSaveBtn: 'Save Channel',
+            chanCancelEdit: 'Cancel Edit',
+            catFormTitle: '<i class="fa-solid fa-folder-plus"></i> Add New Category',
+            catNamePlaceholder: 'Category Name (e.g. News, Music)',
+            catSaveBtn: 'Save Category',
+            backupFormTitle: '<i class="fa-solid fa-floppy-disk"></i> Backup & Restore',
+            exportBtn: '<i class="fa-solid fa-download" style="color:var(--success-color);"></i> Download Backup',
+            importBtn: '<i class="fa-solid fa-upload" style="color:var(--accent-color);"></i> Upload Backup',
+            alertFillFields: 'Channel name and stream URL fields are required.',
+            alertBackupSuccess: 'Backup data successfully restored.',
+            alertBackupInvalid: 'Invalid backup file structure.',
+            alertBackupError: 'Error loading file. Please verify file formatting.',
+            alertSelectChannel: 'Please select a channel from the list first.',
+            confirmDelCat: 'System Alert:\nAre you sure you want to delete category {name}?\nAll channels under this category will move to "Uncategorized".',
+            confirmDelChan: 'Confirm Deletion:\nDo you want to permanently delete channel {name}?\nThis action cannot be undone.',
+            toolTipEdit: 'Edit Channel',
+            toolTipDelete: 'Delete Channel',
+            toolTipDelCat: 'Delete Category'
+        }
+    };
+
+    // New configuration setting up Music instead of National Radios
+    let categories = [
+        { id: 'cat-all', nameFarsi: 'همه کانال‌ها', nameEnglish: 'All Channels' },
+        { id: 'cat-1', nameFarsi: 'موسیقی', nameEnglish: 'Music' },
+        { id: 'cat-2', nameFarsi: 'دسته‌بندی نشده', nameEnglish: 'Uncategorized' }
+    ];
+
+    // Added Navahang and Dance Wave streams
+    let stations = [
+        { id: '1', name: 'نواهنگ', url: 'https://navairan.com/;stream.nsv', categoryId: 'cat-1', isFavorite: false },
+        { id: '2', name: 'Dance Wave', url: 'https://dancewave.online/dance.mp3', categoryId: 'cat-1', isFavorite: false }
+    ];
+
+    window.onload = function() {
+        if(localStorage.getItem('radio_categories_v7')) {
+            categories = JSON.parse(localStorage.getItem('radio_categories_v7'));
+            stations = JSON.parse(localStorage.getItem('radio_stations_v7'));
+        } else {
+            saveToStorage();
+        }
+        
+        currentLang = localStorage.getItem('radio_lang') || 'fa';
+        applyLanguageDOM();
+
+        const savedTheme = localStorage.getItem('radio_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        renderTabs();
+        renderStations();
+        updateCategorySelect();
+        setupAudioListeners();
+    };
+
+    function applyLanguageDOM() {
+        const lang = currentLang;
+        const dict = i18n[lang];
+
+        document.getElementById('app-title').innerHTML = dict.appTitle;
+        document.getElementById('lang-toggle-btn').innerText = lang === 'fa' ? 'EN' : 'FA';
+        
+        if(document.getElementById('chan-edit-id').value === '') {
+            document.getElementById('chan-form-title').innerHTML = dict.chanFormTitle;
+        }
+        document.getElementById('chan-name').placeholder = dict.chanNamePlaceholder;
+        document.getElementById('chan-url').placeholder = dict.chanUrlPlaceholder;
+        document.getElementById('chan-save-btn').innerText = dict.chanSaveBtn;
+        document.getElementById('cancel-chan-edit').innerText = dict.chanCancelEdit;
+        
+        document.getElementById('cat-form-title').innerHTML = dict.catFormTitle;
+        document.getElementById('category-name').placeholder = dict.catNamePlaceholder;
+        document.getElementById('cat-save-btn').innerText = dict.catSaveBtn;
+        
+        document.getElementById('backup-form-title').innerHTML = dict.backupFormTitle;
+        document.getElementById('export-btn').innerHTML = dict.exportBtn;
+        document.getElementById('import-btn').innerHTML = dict.importBtn;
+
+        if (!currentStation) {
+            document.getElementById('track-title').innerText = dict.noStation;
+            document.getElementById('meta-text').innerText = dict.selectStation;
+        }
+        document.getElementById('status-text').innerText = getStatusString();
+
+        if (lang === 'en') {
+            document.dir = 'ltr';
+            document.documentElement.setAttribute('lang', 'en');
+            document.body.classList.add('ltr-mode');
+        } else {
+            document.dir = 'rtl';
+            document.documentElement.setAttribute('lang', 'fa');
+            document.body.classList.remove('ltr-mode');
+        }
+    }
+
+    function toggleLang() {
+        currentLang = currentLang === 'fa' ? 'en' : 'fa';
+        localStorage.setItem('radio_lang', currentLang);
+        applyLanguageDOM();
+        renderTabs();
+        renderStations();
+        updateCategorySelect();
+    }
+
+    function getStatusString() {
+        const dot = document.getElementById('status-indicator');
+        const dict = i18n[currentLang];
+        if (!dot) return dict.statusReady;
+        if (dot.classList.contains('playing')) return dict.statusPlaying;
+        if (dot.classList.contains('loading')) return dict.statusBuffering;
+        if (dot.classList.contains('error')) return dict.statusError;
+        if (audio.src && audio.paused) return dict.statusPaused;
+        return dict.statusReady;
+    }
+
+    function saveToStorage() {
+        localStorage.setItem('radio_categories_v7', JSON.stringify(categories));
+        localStorage.setItem('radio_stations_v7', JSON.stringify(stations));
+    }
+
+    function exportBackup() {
+        const backupData = { version: "7.0", categories, stations };
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+        const downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", "nava_backup.json");
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+    }
+
+    function importBackup(inputElement) {
+        const file = inputElement.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const parsedData = JSON.parse(e.target.result);
+                if (parsedData.categories && parsedData.stations) {
+                    categories = parsedData.categories;
+                    stations = parsedData.stations;
+                    saveToStorage();
+                    activeTabId = 'cat-all';
+                    renderTabs();
+                    renderStations();
+                    updateCategorySelect();
+                    alert(i18n[currentLang].alertBackupSuccess);
+                    inputElement.value = '';
+                } else {
+                    alert(i18n[currentLang].alertBackupInvalid);
+                }
+            } catch (err) {
+                alert(i18n[currentLang].alertBackupError);
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('radio_theme', newTheme);
+        updateThemeIcon(newTheme);
+    }
+
+    function updateThemeIcon(theme) {
+        const icon = document.getElementById('theme-toggle-btn').querySelector('i');
+        icon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    }
+
+    function toggleManagePanel() {
+        const panel = document.getElementById('manage-panel');
+        panel.style.display = (panel.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    function updateCategorySelect() {
+        const select = document.getElementById('chan-category');
+        select.innerHTML = '';
+        categories.forEach(cat => {
+            if(cat.id !== 'cat-all') {
+                const opt = document.createElement('option');
+                opt.value = cat.id;
+                opt.innerText = currentLang === 'fa' ? cat.nameFarsi : cat.nameEnglish;
+                select.appendChild(opt);
+            }
+        });
+    }
+
+    function renderTabs() {
+        const container = document.getElementById('tabs-container');
+        container.innerHTML = '';
+
+        categories.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.className = `tab-btn ${activeTabId === cat.id ? 'active' : ''}`;
+            btn.onclick = () => { activeTabId = cat.id; renderTabs(); renderStations(); };
+
+            let deleteIcon = '';
+            if (cat.id !== 'cat-all' && cat.id !== 'cat-2') {
+                deleteIcon = `<i class="fa-solid fa-circle-xmark delete-cat-icon" onclick="deleteCategory(event, '${cat.id}')" title="${i18n[currentLang].toolTipDelCat}"></i>`;
+            }
+
+            const name = currentLang === 'fa' ? cat.nameFarsi : cat.nameEnglish;
+            btn.innerHTML = `<span>${name}</span> ${deleteIcon}`;
+            container.appendChild(btn);
+        });
+    }
+
+    function renderStations() {
+        const container = document.getElementById('station-list-container');
+        container.innerHTML = '';
+
+        let filteredStations = [...stations];
+        if (activeTabId !== 'cat-all') {
+            filteredStations = stations.filter(s => s.categoryId === activeTabId);
+        }
+        filteredStations.sort((a,b) => b.isFavorite - a.isFavorite);
+
+        if(filteredStations.length === 0) {
+            container.innerHTML = `<p style="text-align:center; font-size:12px; color:var(--text-muted); margin-top:20px;">${i18n[currentLang].noStationFound}</p>`;
+            return;
+        }
+
+        filteredStations.forEach(station => {
+            const li = document.createElement('li');
+            li.className = `station-item ${currentStation && currentStation.id === station.id ? 'active-playing' : ''}`;
+            li.innerHTML = `
+                <div class="station-info" onclick="selectStation('${station.id}')">
+                    <i class="fa-solid fa-star fav-star ${station.isFavorite ? 'active' : ''}" onclick="toggleFavorite(event, '${station.id}')"></i>
+                    <span>${station.name}</span>
+                </div>
+                <div class="item-actions">
+                    <button class="edit" onclick="editChannel('${station.id}')" title="${i18n[currentLang].toolTipEdit}"><i class="fa-solid fa-pen"></i></button>
+                    <button class="delete" onclick="deleteChannel('${station.id}')" title="${i18n[currentLang].toolTipDelete}"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+            container.appendChild(li);
+        });
+    }
+
+    function saveCategory() {
+        const nameInput = document.getElementById('category-name');
+        const name = nameInput.value.trim();
+        if(!name) return;
+
+        categories.push({ id: 'cat-' + Date.now(), nameFarsi: name, nameEnglish: name });
+        nameInput.value = '';
+        saveToStorage();
+        renderTabs();
+        updateCategorySelect();
+    }
+
+    function deleteCategory(event, catId) {
+        event.stopPropagation();
+        const targetCategory = categories.find(c => c.id === catId);
+        const nameStr = targetCategory ? `"${currentLang === 'fa' ? targetCategory.nameFarsi : targetCategory.nameEnglish}"` : "";
+        
+        if(!confirm(i18n[currentLang].confirmDelCat.replace('{name}', nameStr))) return;
+        
+        stations.forEach(s => { if(s.categoryId === catId) s.categoryId = 'cat-2'; });
+        categories = categories.filter(c => c.id !== catId);
+        if (activeTabId === catId) activeTabId = 'cat-all';
+
+        saveToStorage();
+        renderTabs();
+        renderStations();
+        updateCategorySelect();
+    }
+
+    function saveChannel() {
+        const idInput = document.getElementById('chan-edit-id').value;
+        const name = document.getElementById('chan-name').value.trim();
+        const catId = document.getElementById('chan-category').value;
+        const url = document.getElementById('chan-url').value.trim();
+
+        if (!name || !url) { alert(i18n[currentLang].alertFillFields); return; }
+
+        if (idInput) {
+            const station = stations.find(s => s.id === idInput);
+            if (station) { station.name = name; station.url = url; station.categoryId = catId; }
+        } else {
+            stations.push({ id: 'chan-' + Date.now(), name, url, categoryId: catId, isFavorite: false });
+        }
+
+        saveToStorage();
+        renderStations();
+        resetChannelForm();
+    }
+
+    function editChannel(id) {
+        const station = stations.find(s => s.id === id);
+        if (!station) return;
+
+        document.getElementById('chan-edit-id').value = station.id;
+        document.getElementById('chan-name').value = station.name;
+        document.getElementById('chan-url').value = station.url;
+        document.getElementById('chan-category').value = station.categoryId;
+        
+        document.getElementById('chan-form-title').innerText = i18n[currentLang].chanFormTitleEdit + station.name;
+        document.getElementById('cancel-chan-edit').style.display = "inline-block";
+        document.getElementById('manage-panel').style.display = 'flex';
+    }
+
+    function deleteChannel(id) {
+        const station = stations.find(s => s.id === id);
+        const nameStr = station ? `"${station.name}"` : "";
+
+        if(!confirm(i18n[currentLang].confirmDelChan.replace('{name}', nameStr))) return;
+        
+        stations = stations.filter(s => s.id !== id);
+        saveToStorage();
+        renderStations();
+        if (currentStation && currentStation.id === id) {
+            audio.src = '';
+            document.getElementById('track-title').innerText = i18n[currentLang].noStation;
+            updateStatus('ready');
+            document.getElementById('meta-text').innerText = i18n[currentLang].selectStation;
+        }
+    }
+
+    function resetChannelForm() {
+        document.getElementById('chan-edit-id').value = '';
+        document.getElementById('chan-name').value = '';
+        document.getElementById('chan-url').value = '';
+        document.getElementById('chan-form-title').innerHTML = i18n[currentLang].chanFormTitle;
+        document.getElementById('cancel-chan-edit').style.display = "none";
+    }
+
+    function toggleFavorite(event, id) {
+        event.stopPropagation();
+        const station = stations.find(s => s.id === id);
+        if (station) { station.isFavorite = !station.isFavorite; saveToStorage(); renderStations(); }
+    }
+
+    function selectStation(id) {
+        const station = stations.find(s => s.id === id);
+        if (!station) return;
+
+        currentStation = station;
+        document.getElementById('track-title').innerText = station.name;
+        document.getElementById('meta-text').innerText = i18n[currentLang].metaConnecting;
+        audio.src = station.url;
+        
+        renderStations(); 
+        audio.play().catch(() => updateStatus('error'));
+    }
+
+    function togglePlayback() {
+        if(!audio.src) { alert(i18n[currentLang].alertSelectChannel); return; }
+        if(audio.paused) { audio.play().catch(() => updateStatus('error')); } else { audio.pause(); }
+    }
+
+    function seekAudio(value) { audio.currentTime = value; }
+
+    function changeVolume(val) {
+        audio.volume = val;
+        audio.muted = (val == 0);
+        updateMuteIcon();
+    }
+
+    function toggleMute() { audio.muted = !audio.muted; updateMuteIcon(); }
+
+    function updateMuteIcon() {
+        const icon = document.getElementById('mute-btn').querySelector('i');
+        if (audio.muted || audio.volume == 0) {
+            icon.className = "fa-solid fa-volume-xmark";
+            document.getElementById('mute-btn').style.background = "var(--danger-color)";
+            document.getElementById('mute-btn').style.color = "white";
+        } else {
+            icon.className = "fa-solid fa-volume-high";
+            document.getElementById('mute-btn').style.background = "var(--border-color)";
+            document.getElementById('mute-btn').style.color = "var(--text-color)";
+        }
+    }
+
+    function updateStatus(state) {
+        const indicator = document.getElementById('status-indicator');
+        const text = document.getElementById('status-text');
+        
+        indicator.className = 'status-dot';
+        if (state === 'playing') indicator.classList.add('playing');
+        else if (state === 'loading') indicator.classList.add('loading');
+        else if (state === 'error') indicator.classList.add('error');
+
+        text.innerText = getStatusString();
+    }
+
+    function formatTime(secs) {
+        if (isNaN(secs) || !isFinite(secs)) return "00:00";
+        const m = Math.floor(secs / 60).toString().padStart(2, '0');
+        const s = Math.floor(secs % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+    }
+
+    // HTML5 core stream processing events listener
+    function setupAudioListeners() {
+        audio.addEventListener('timeupdate', () => {
+            document.getElementById('time-current').innerText = formatTime(audio.currentTime);
+            document.getElementById('seek-slider').value = audio.currentTime;
+        });
+
+        audio.addEventListener('durationchange', () => {
+            document.getElementById('seek-slider').max = audio.duration;
+            document.getElementById('time-duration').innerText = formatTime(audio.duration);
+        });
+
+        audio.addEventListener('waiting', () => {
+            updateStatus('loading');
+            document.getElementById('meta-text').innerText = i18n[currentLang].metaBuffering;
+        });
+        
+        audio.addEventListener('playing', () => {
+            updateStatus('playing');
+            document.getElementById('master-play-btn').innerHTML = '<i class="fa-solid fa-pause"></i>';
+            const currentMeta = document.getElementById('meta-text').innerText;
+            if(currentMeta === i18n.fa.metaBuffering || currentMeta === i18n.en.metaBuffering || currentMeta === i18n.fa.metaConnecting || currentMeta === i18n.en.metaConnecting) {
+                document.getElementById('meta-text').innerText = i18n[currentLang].metaPlaying;
+            }
+        });
+
+        audio.addEventListener('pause', () => {
+            updateStatus('ready');
+            document.getElementById('master-play-btn').innerHTML = '<i class="fa-solid fa-play"></i>';
+        });
+
+        audio.addEventListener('error', () => {
+            updateStatus('error');
+            document.getElementById('master-play-btn').innerHTML = '<i class="fa-solid fa-play"></i>';
+            document.getElementById('meta-text').innerText = i18n[currentLang].metaError;
+        });
+
+        if ('mediaSession' in navigator) {
+            audio.addEventListener('loadstart', () => { navigator.mediaSession.metadata = null; });
+            const parseMetadata = () => {
+                if (navigator.mediaSession.metadata) {
+                    const title = navigator.mediaSession.metadata.title || "";
+                    const artist = navigator.mediaSession.metadata.artist || "";
+                    if(title || artist) {
+                        document.getElementById('meta-text').innerText = `${i18n[currentLang].metaPlayingTrack}${title} ${artist ? ' - ' + artist : ''}`;
+                    }
+                }
+            };
+            audio.addEventListener('loadedmetadata', parseMetadata);
+            audio.addEventListener('durationchange', parseMetadata);
+        }
+    }
+</script>
+
+</body>
+</html>

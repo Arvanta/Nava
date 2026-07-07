@@ -6,7 +6,6 @@
 
 🇮🇷 فارسی
 
-توضیحات کوتاه:
 «نوا | Nava» یک برنامه تحت وب مدرن، شیک و سبک (Glassmorphism) برای پخش استریم‌های رادیویی و موسیقی آنلاین است. این برنامه با رابط کاربری دو زبانه و هوشمند، به کاربران اجازه می‌دهد تا به راحتی شبکه‌های صوتی دلخواه خود را اضافه، دسته‌بندی و مدیریت کنند.
 
 امکانات اصلی برنامه:
@@ -39,7 +38,6 @@
 
 🇬🇧 English
 
-Short Description:
 "Nava" is a modern, sleek, and lightweight web application designed with a beautiful Glassmorphism UI for streaming online radio and live music. Featuring an intelligent bilingual interface, it allows users to effortlessly add, categorize, and manage their favorite audio streams in one place.
 
 Key Features:

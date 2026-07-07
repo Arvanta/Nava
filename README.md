@@ -1,5 +1,9 @@
 # Nava
 
+
+![alt text](https://github.com/Arvanta/Nava/blob/main/Nava1.png?raw=true) 
+
+
 🇮🇷 فارسی
 
 توضیحات کوتاه:
@@ -26,6 +30,12 @@
     🛰️ دریافت خودکار متادیتا: نمایش نام ترک در حال پخش و وضعیت استریم (بافر، خطا، زنده) به صورت هوشمند.
 
     📱 طراحی کاملاً واکنش‌گرا (Responsive): بهینه‌سازی شده برای نمایش بی‌نقص در انواع موبایل، تبلت و دسکتاپ.
+
+
+
+
+ ![alt text](https://github.com/Arvanta/Nava/blob/main/Nava2.png?raw=true)
+ 
 
 🇬🇧 English
 

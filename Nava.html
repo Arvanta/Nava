@@ -49,7 +49,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 12px;
         }
 
         .container {
@@ -62,7 +62,7 @@
             border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            height: 700px;
+            height: min(750px, 92vh); /* ساختار ریسپانسیو پویا برای ارتفاع */
         }
 
         header {
@@ -118,7 +118,7 @@
             flex-direction: column;
             gap: 12px;
             border: 1px solid var(--border-color);
-            max-height: 320px;
+            overflow-y: auto; /* اسکرول برای مواقعی که فرم در مانیتورهای کوچک جا نمیشود */
             flex-shrink: 0;
         }
 
@@ -135,6 +135,7 @@
             font-size: 12px;
             outline: none;
             flex-grow: 1;
+            width: 100%;
         }
         input[type="text"]:focus, select:focus { border-color: var(--accent-color); }
 
@@ -239,9 +240,15 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            overflow: hidden;
+        }
+        .station-info span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .fav-star { color: var(--text-muted); cursor: pointer; font-size: 14px; transition: color 0.2s; }
+        .fav-star { color: var(--text-muted); cursor: pointer; font-size: 14px; transition: color 0.2s; flex-shrink: 0; }
         .fav-star.active { color: #eab308; }
 
         .item-actions {
@@ -250,6 +257,10 @@
             gap: 4px;
             opacity: 0;
             transition: opacity 0.15s ease;
+        }
+        /* در حالت موبایل دکمه‌ها همیشه نمایش داده شوند تا تجربه لمسی خراب نشود */
+        @media (max-width: 768px) {
+            .item-actions { opacity: 1; }
         }
         .station-item:hover .item-actions {
             opacity: 1;
@@ -299,24 +310,9 @@
             background: var(--accent-hover);
         }
 
-        input[type="range"]::-moz-range-thumb {
-            width: 14px;
-            height: 14px;
-            border: none;
-            border-radius: 50%;
-            background: var(--accent-color);
-            cursor: pointer;
-            transition: transform 0.15s ease, background-color 0.15s;
-        }
-
-        input[type="range"]::-moz-range-thumb:hover {
-            transform: scale(1.25);
-            background: var(--accent-hover);
-        }
-
         .bottom-player {
             background: var(--panel-bg);
-            padding: 16px 14px;
+            padding: 14px 12px;
             border-radius: 14px;
             border: 1px solid var(--border-color);
             flex-shrink: 0;
@@ -328,8 +324,9 @@
             align-items: center;
             margin-bottom: 6px;
         }
-        .playing-name { font-weight: bold; font-size: 14px; color: var(--accent-color); display: flex; align-items: center; gap: 6px; }
-        .status-badge { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;}
+        .playing-name { font-weight: bold; font-size: 14px; color: var(--accent-color); display: flex; align-items: center; gap: 6px;     overflow: hidden;}
+        .playing-name span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .status-badge { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; flex-shrink: 0;}
         .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #64748b; }
         .status-dot.playing { background: var(--success-color); box-shadow: 0 0 8px var(--success-color); }
         .status-dot.loading { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
@@ -338,7 +335,7 @@
         .meta-info {
             font-size: 12px;
             color: var(--text-muted);
-            margin-bottom: 14px;
+            margin-bottom: 12px;
             min-height: 18px;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -351,7 +348,7 @@
         .controls-inline-row {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
             justify-content: space-between;
             direction: ltr !important; 
         }
@@ -367,17 +364,17 @@
             flex-grow: 2;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
-        .timeline-container input { width: 100%; min-width: 130px; }
+        .timeline-container input { width: 100%; min-width: 60px; }
         .time-text { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
 
         .volume-container {
             flex-grow: 1;
-            max-width: 140px;
+            max-width: 120px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .volume-container input { width: 100%; }
 
@@ -385,8 +382,8 @@
             background-color: var(--card-color);
             color: var(--text-muted);
             border: 1px solid var(--border-color);
-            width: 36px;
-            height: 36px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -400,33 +397,48 @@
         .player-action-btn:hover { 
             background-color: var(--border-color); 
             color: var(--text-color);
-        }
-        
-        .player-action-btn:active {
-            transform: scale(0.95);
+            transform: scale(1.05);
         }
 
         #master-play-btn { 
             background: var(--accent-color); 
             color: white; 
             border-color: var(--accent-color);
-            width: 40px; 
-            height: 40px; 
-            font-size: 14px;
+            width: 38px; 
+            height: 38px; 
+            font-size: 13px;
         }
-        #master-play-btn:hover { 
-            background: var(--accent-hover); 
-            border-color: var(--accent-hover);
-        }
-        
-        #master-stop-btn:hover {
-            color: var(--danger-color);
-            border-color: rgba(239, 68, 68, 0.3);
-        }
+        #master-play-btn:hover { background: var(--accent-hover); border-color: var(--accent-hover);}
+        #master-stop-btn:hover { color: var(--danger-color); border-color: rgba(239, 68, 68, 0.3); }
 
-        html[dir="ltr"] .main-content {
-            padding-right: 0;
-            padding-left: 4px;
+        html[dir="ltr"] .main-content { padding-right: 0; padding-left: 4px; }
+
+        /* میدیا کوئری‌های ریسپانسیو اختصاصی صفحات کوچک و موبایل */
+        @media (max-width: 480px) {
+            body { padding: 6px; }
+            .container { padding: 14px; height: 96vh; }
+            header h1 { font-size: 16px; }
+            .form-row { flex-direction: column; gap: 8px; }
+            .backup-zone { flex-direction: column; }
+            
+            /* بازسازی ساختار ردیف کنترل پلیر به حالت دو ردیفه در موبایل جهت جلوگیری از مچاله شدن */
+            .controls-inline-row {
+                flex-direction: column;
+                gap: 12px;
+                align-items: stretch;
+            }
+            .timeline-container {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .volume-container {
+                max-width: none;
+                width: 100%;
+                justify-content: flex-end;
+                border-top: 1px solid var(--border-color);
+                padding-top: 8px;
+            }
+            .volume-container input { max-width: 150px; }
         }
     </style>
 </head>
@@ -488,7 +500,7 @@
 
     <div class="bottom-player">
         <div class="player-header">
-            <div class="playing-name" id="track-title"><i class="fa-solid fa-compact-disc"></i> کانالی انتخاب نشده است</div>
+            <div class="playing-name" id="track-title"><i class="fa-solid fa-compact-disc"></i> <span>کانالی انتخاب نشده است</span></div>
             <div class="status-badge">
                 <span id="status-text">آماده</span>
                 <div id="status-indicator" class="status-dot"></div>
@@ -617,7 +629,7 @@
 
     let stations = [
         { id: '1', name: 'نواهنگ', url: 'https://navairan.com/;stream.nsv', categoryId: 'cat-1', isFavorite: false },
-		{ id: '2', name: 'رادیو شادی', url: 'https://ice9.securenetsystems.net/SHADI', categoryId: 'cat-1', isFavorite: false },
+        { id: '2', name: 'رادیو شادی', url: 'https://ice9.securenetsystems.net/SHADI', categoryId: 'cat-1', isFavorite: false },
         { id: '3', name: 'Dance Wave', url: 'https://dancewave.online/dance.mp3', categoryId: 'cat-1', isFavorite: false }
     ];
 
@@ -679,13 +691,13 @@
 
         if (currentStation) {
             if (audio.paused && !audio.src) {
-                document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc"></i> ` + currentStation.name;
+                document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc"></i> <span>${currentStation.name}</span>`;
                 document.getElementById('meta-text').innerHTML = dict.selectStation;
             } else if (!audio.paused && audio.src) {
-                document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc fa-spin"></i> ` + currentStation.name;
+                document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc fa-spin"></i> <span>${currentStation.name}</span>`;
                 document.getElementById('meta-text').innerHTML = dict.metaPlaying;
             } else if (audio.paused && audio.src) {
-                document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc"></i> ` + currentStation.name;
+                document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc"></i> <span>${currentStation.name}</span>`;
                 document.getElementById('meta-text').innerHTML = dict.selectStation;
             }
         } else {
@@ -999,7 +1011,7 @@
         if (!station) return;
 
         currentStation = station;
-        document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc fa-spin"></i> ` + station.name;
+        document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc fa-spin"></i> <span>${station.name}</span>`;
         document.getElementById('meta-text').innerHTML = i18n[currentLang].metaConnecting;
         
         isExplicitStop = false;
@@ -1042,7 +1054,7 @@
         updateSliderFill(seek);
         
         if(currentStation) {
-            document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc"></i> ` + currentStation.name;
+            document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc"></i> <span>${currentStation.name}</span>`;
             document.getElementById('meta-text').innerHTML = i18n[currentLang].selectStation;
         } else {
             document.getElementById('track-title').innerHTML = i18n[currentLang].noStation;
@@ -1051,7 +1063,7 @@
     }
 
     function seekAudio(value) { 
-        if(audio.src && isFinite(audio.duration)) {
+        if(audio.src && isFinite(audio.duration) && audio.duration !== Infinity) {
             audio.currentTime = value; 
         }
     }
@@ -1106,7 +1118,7 @@
     }
 
     function setupAudioListeners() {
-	audio.addEventListener('timeupdate', () => {
+        audio.addEventListener('timeupdate', () => {
             if(isFinite(audio.duration) && audio.duration > 0 && audio.duration !== Infinity) {
                 document.getElementById('time-current').innerText = formatTime(audio.currentTime);
                 const seek = document.getElementById('seek-slider');
@@ -1115,20 +1127,20 @@
             }
         });
 
-		audio.addEventListener('durationchange', () => {
+        audio.addEventListener('durationchange', () => {
             const seek = document.getElementById('seek-slider');
             if(isFinite(audio.duration) && audio.duration > 0 && audio.duration !== Infinity) {
                 seek.max = audio.duration;
                 document.getElementById('time-duration').innerText = formatTime(audio.duration);
-                seek.disabled = false; 
+                seek.disabled = false;
                 seek.style.opacity = "1";
             } else {
                 seek.max = 0;
                 seek.value = 0;
                 document.getElementById('time-current').innerText = "00:00";
-                document.getElementById('time-duration').innerText = "LIVE"; // نمایش کلمه زنده
-                seek.disabled = true; 
-                seek.style.opacity = "0.5"; 
+                document.getElementById('time-duration').innerText = "LIVE";
+                seek.disabled = true;
+                seek.style.opacity = "0.5";
             }
             updateSliderFill(seek);
         });
@@ -1142,7 +1154,7 @@
             updateStatus('playing');
             document.getElementById('master-play-btn').innerHTML = '<i class="fa-solid fa-pause"></i>';
             if (currentStation) {
-                document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc fa-spin"></i> ` + currentStation.name;
+                document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc fa-spin"></i> <span>${currentStation.name}</span>`;
             }
             const currentMeta = document.getElementById('meta-text').innerHTML;
             if(currentMeta === i18n.fa.metaBuffering || currentMeta === i18n.en.metaBuffering || currentMeta === i18n.fa.metaConnecting || currentMeta === i18n.en.metaConnecting) {
@@ -1155,7 +1167,7 @@
                 updateStatus('ready');
                 document.getElementById('master-play-btn').innerHTML = '<i class="fa-solid fa-play"></i>';
                 if (currentStation) {
-                    document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc"></i> ` + currentStation.name;
+                    document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc"></i> <span>${currentStation.name}</span>`;
                 }
             }
         });

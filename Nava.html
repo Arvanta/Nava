@@ -21,6 +21,7 @@
             --panel-bg: #111827;
             --border-color: #334155;
             --warning-color: #f59e0b;
+            --slider-empty: #334155;
         }
 
         [data-theme="light"] {
@@ -30,6 +31,7 @@
             --text-muted: #64748b;
             --panel-bg: #f8fafc;
             --border-color: #cbd5e1;
+            --slider-empty: #cbd5e1;
         }
 
         * {
@@ -60,11 +62,8 @@
             border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
-            height: 700px; /* App height increased by 100px */
+            height: 700px;
         }
-
-        body.ltr-mode { direction: ltr; }
-        body.ltr-mode input[type="range"] { direction: ltr; }
 
         header {
             display: flex;
@@ -73,9 +72,10 @@
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
         }
 
-        header h1 { font-size: 18px; }
+        header h1 { font-size: 18px; display: flex; align-items: center; gap: 8px; }
 
         .header-actions {
             display: flex;
@@ -83,20 +83,31 @@
         }
 
         .icon-btn {
-            background: var(--border-color);
-            color: var(--text-color);
-            border: none;
-            width: 34px;
-            height: 34px;
-            border-radius: 8px;
+            background-color: var(--panel-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 12px;
             text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .icon-btn:hover { background: var(--accent-color); color: white; }
+        
+        .icon-btn:hover { 
+            background-color: var(--border-color); 
+            color: var(--text-color);
+            transform: translateY(-1px) scale(1.05);
+            border-color: var(--text-muted);
+        }
+
+        .icon-btn:active {
+            transform: translateY(0) scale(0.95);
+        }
 
         .manage-panel {
             background: var(--panel-bg);
@@ -108,10 +119,10 @@
             gap: 12px;
             border: 1px solid var(--border-color);
             max-height: 320px;
-            overflow-y: auto;
+            flex-shrink: 0;
         }
 
-        .manage-panel h3 { font-size: 13px; color: var(--accent-color); }
+        .manage-panel h3 { font-size: 13px; color: var(--accent-color); display: flex; align-items: center; gap: 6px; }
 
         .form-row { display: flex; gap: 6px; }
 
@@ -132,6 +143,9 @@
             border: none; color: white; padding: 6px 12px;
             border-radius: 6px; cursor: pointer; font-size: 12px;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         .backup-zone {
@@ -152,6 +166,7 @@
             gap: 6px;
             flex: 1;
             justify-content: center;
+            transition: all 0.2s;
         }
         .backup-btn:hover {
             background: var(--card-color);
@@ -161,10 +176,11 @@
         .tabs-container {
             display: flex;
             gap: 6px;
-            overflow-x: auto;
             padding-bottom: 8px;
             margin-bottom: 12px;
             border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+            overflow-x: auto;
         }
         .tabs-container::-webkit-scrollbar { height: 4px; }
         .tabs-container::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
@@ -187,14 +203,18 @@
             color: white;
             border-color: var(--accent-color);
         }
-        .tab-btn .delete-cat-icon { color: inherit; opacity: 0.6; }
+        .tab-btn .delete-cat-icon { color: inherit; opacity: 0.6; font-size: 13px; }
         .tab-btn .delete-cat-icon:hover { color: var(--danger-color); opacity: 1; }
 
         .main-content {
             flex-grow: 1;
             overflow-y: auto;
             margin-bottom: 15px;
+            padding-right: 4px;
         }
+        .main-content::-webkit-scrollbar { width: 5px; }
+        .main-content::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        .main-content::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
         .station-list { list-style: none; }
 
@@ -221,28 +241,85 @@
             gap: 10px;
         }
 
-        .fav-star { color: var(--text-muted); cursor: pointer; }
+        .fav-star { color: var(--text-muted); cursor: pointer; font-size: 14px; transition: color 0.2s; }
         .fav-star.active { color: #eab308; }
 
-        .item-actions button {
-            background: none; border: none; color: var(--text-muted);
-            cursor: pointer; padding: 4px; font-size: 12px;
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            opacity: 0;
+            transition: opacity 0.15s ease;
         }
-        .item-actions button.edit:hover { color: var(--accent-color); }
-        .item-actions button.delete:hover { color: var(--danger-color); }
+        .station-item:hover .item-actions {
+            opacity: 1;
+        }
 
+        .item-actions button, .drag-handle {
+            background: none; border: none; color: var(--text-muted);
+            cursor: pointer; padding: 4px; font-size: 13px;
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 26px; height: 26px; border-radius: 4px;
+            transition: all 0.15s;
+        }
+        .drag-handle {
+            cursor: grab;
+            color: var(--text-muted);
+        }
+        .drag-handle:active { cursor: grabbing; }
+        
+        .item-actions button.edit:hover { background: rgba(59, 130, 246, 0.15); color: var(--accent-color); }
+        .item-actions button.delete:hover { background: rgba(239, 68, 68, 0.15); color: var(--danger-color); }
+        .drag-handle:hover { background: rgba(248, 250, 252, 0.1); color: var(--text-color); }
+
+        /* استایل اسلایدرها */
         input[type="range"] {
-            direction: ltr;
-            accent-color: var(--accent-color);
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--border-color);
+            height: 6px;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-color);
             cursor: pointer;
-            background: transparent;
+            transition: transform 0.15s ease, background-color 0.15s;
+            box-shadow: 0 0 2px rgba(0,0,0,0.5);
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.25);
+            background: var(--accent-hover);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border: none;
+            border-radius: 50%;
+            background: var(--accent-color);
+            cursor: pointer;
+            transition: transform 0.15s ease, background-color 0.15s;
+        }
+
+        input[type="range"]::-moz-range-thumb:hover {
+            transform: scale(1.25);
+            background: var(--accent-hover);
         }
 
         .bottom-player {
             background: var(--panel-bg);
-            padding: 14px 12px;
-            border-radius: 12px;
+            padding: 16px 14px;
+            border-radius: 14px;
             border: 1px solid var(--border-color);
+            flex-shrink: 0;
         }
 
         .player-header {
@@ -251,54 +328,65 @@
             align-items: center;
             margin-bottom: 6px;
         }
-        .playing-name { font-weight: bold; font-size: 14px; color: var(--accent-color); }
+        .playing-name { font-weight: bold; font-size: 14px; color: var(--accent-color); display: flex; align-items: center; gap: 6px; }
         .status-badge { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px;}
         .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #64748b; }
-        .status-dot.playing { background: var(--success-color); }
-        .status-dot.loading { background: #f59e0b; }
-        .status-dot.error { background: var(--danger-color); }
+        .status-dot.playing { background: var(--success-color); box-shadow: 0 0 8px var(--success-color); }
+        .status-dot.loading { background: #f59e0b; box-shadow: 0 0 8px #f59e0b; }
+        .status-dot.error { background: var(--danger-color); box-shadow: 0 0 8px var(--danger-color); }
 
         .meta-info {
             font-size: 12px;
             color: var(--text-muted);
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             min-height: 18px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-        }
-
-        .controls-inline-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            justify-content: space-between;
-        }
-
-        .control-sub-group {
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
+        .controls-inline-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            justify-content: space-between;
+            direction: ltr !important; 
+        }
+
+        .control-sub-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            direction: ltr !important;
+        }
+
         .timeline-container {
             flex-grow: 2;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .timeline-container input { width: 100%; min-width: 130px; }
-        .time-text { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+        .time-text { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
 
         .volume-container {
             flex-grow: 1;
             max-width: 140px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .volume-container input { width: 100%; }
 
         .player-action-btn {
-            background: var(--border-color);
-            color: var(--text-color);
-            border: none;
-            width: 32px;
-            height: 32px;
+            background-color: var(--card-color);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -306,8 +394,40 @@
             justify-content: center;
             font-size: 12px;
             flex-shrink: 0;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .player-action-btn:hover { background: var(--accent-color); color: white; }
+        
+        .player-action-btn:hover { 
+            background-color: var(--border-color); 
+            color: var(--text-color);
+        }
+        
+        .player-action-btn:active {
+            transform: scale(0.95);
+        }
+
+        #master-play-btn { 
+            background: var(--accent-color); 
+            color: white; 
+            border-color: var(--accent-color);
+            width: 40px; 
+            height: 40px; 
+            font-size: 14px;
+        }
+        #master-play-btn:hover { 
+            background: var(--accent-hover); 
+            border-color: var(--accent-hover);
+        }
+        
+        #master-stop-btn:hover {
+            color: var(--danger-color);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        html[dir="ltr"] .main-content {
+            padding-right: 0;
+            padding-left: 4px;
+        }
     </style>
 </head>
 <body>
@@ -333,9 +453,9 @@
             </div>
             <div class="form-row">
                 <input type="text" id="chan-url" placeholder="آدرس استریم URL">
-                <button class="action-mini-btn" id="chan-save-btn" onclick="saveChannel()">ذخیره کانال</button>
+                <button class="action-mini-btn" id="chan-save-btn" onclick="saveChannel()"><i class="fa-solid fa-floppy-disk"></i> ذخیره کانال</button>
             </div>
-            <button id="cancel-chan-edit" style="background:none; border:none; color:var(--danger-color); font-size:11px; cursor:pointer; display:none; margin-top:5px;" onclick="resetChannelForm()">انصراف از ویرایش</button>
+            <button id="cancel-chan-edit" style="background:none; border:none; color:var(--danger-color); font-size:11px; cursor:pointer; display:none; margin-top:5px;" onclick="resetChannelForm()"><i class="fa-solid fa-rotate-left"></i> انصراف از ویرایش</button>
         </div>
         
         <hr style="border: 0; border-top: 1px solid var(--border-color);">
@@ -344,17 +464,17 @@
             <h3 id="cat-form-title"><i class="fa-solid fa-folder-plus"></i> افزودن دسته جدید</h3>
             <div class="form-row" style="margin-top: 4px;">
                 <input type="text" id="category-name" placeholder="نام دسته (مثلاً: ورزشی، موزیک)">
-                <button class="action-mini-btn" id="cat-save-btn" onclick="saveCategory()">ذخیره دسته</button>
+                <button class="action-mini-btn" id="cat-save-btn" onclick="saveCategory()"><i class="fa-solid fa-plus"></i> ذخیره دسته</button>
             </div>
         </div>
         
         <hr style="border: 0; border-top: 1px solid var(--border-color);">
         
         <div>
-            <h3 id="backup-form-title"><i class="fa-solid fa-floppy-disk"></i> پشتیبان‌گیری از اطلاعات</h3>
+            <h3 id="backup-form-title"><i class="fa-solid fa-database"></i> پشتیبان‌گیری از اطلاعات</h3>
             <div class="backup-zone" style="margin-top: 4px;">
-                <button class="backup-btn" id="export-btn" onclick="exportBackup()"><i class="fa-solid fa-download" style="color:var(--success-color);"></i> دانلود فایل پشتیبان</button>
-                <button class="backup-btn" id="import-btn" onclick="document.getElementById('import-file-input').click()"><i class="fa-solid fa-upload" style="color:var(--accent-color);"></i> بارگذاری فایل پشتیبان</button>
+                <button class="backup-btn" id="export-btn" onclick="exportBackup()"><i class="fa-solid fa-cloud-arrow-down" style="color:var(--success-color); font-size:13px;"></i> دانلود فایل پشتیبان</button>
+                <button class="backup-btn" id="import-btn" onclick="document.getElementById('import-file-input').click()"><i class="fa-solid fa-cloud-arrow-up" style="color:var(--accent-color); font-size:13px;"></i> بارگذاری فایل پشتیبان</button>
                 <input type="file" id="import-file-input" accept=".json" style="display:none;" onchange="importBackup(this)">
             </div>
         </div>
@@ -368,26 +488,27 @@
 
     <div class="bottom-player">
         <div class="player-header">
-            <div class="playing-name" id="track-title">کانالی انتخاب نشده است</div>
+            <div class="playing-name" id="track-title"><i class="fa-solid fa-compact-disc"></i> کانالی انتخاب نشده است</div>
             <div class="status-badge">
                 <span id="status-text">آماده</span>
                 <div id="status-indicator" class="status-dot"></div>
             </div>
         </div>
 
-        <div class="meta-info" id="meta-text">انتخاب کانال برای پخش...</div>
+        <div class="meta-info" id="meta-text"><i class="fa-solid fa-circle-info"></i> انتخاب کانال برای پخش...</div>
 
         <div class="controls-inline-row">
             <div class="control-sub-group timeline-container">
-                <span class="time-text" id="time-current">00:00</span>
-                <input type="range" id="seek-slider" min="0" max="0" value="0" onchange="seekAudio(this.value)">
-                <span class="time-text" id="time-duration">00:00</span>
                 <button id="master-play-btn" class="player-action-btn" onclick="togglePlayback()"><i class="fa-solid fa-play"></i></button>
+                <button id="master-stop-btn" class="player-action-btn" onclick="stopPlayback()" title="توقف کامل"><i class="fa-solid fa-stop"></i></button>
+                <span class="time-text" id="time-current">00:00</span>
+                <input type="range" id="seek-slider" min="0" max="0" value="0" oninput="seekAudio(this.value); updateSliderFill(this);" onchange="seekAudio(this.value)">
+                <span class="time-text" id="time-duration">00:00</span>
             </div>
 
             <div class="control-sub-group volume-container">
-                <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="1" oninput="changeVolume(this.value)">
                 <button id="mute-btn" class="player-action-btn" onclick="toggleMute()"><i class="fa-solid fa-volume-high"></i></button>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1" oninput="changeVolume(this.value)">
             </div>
         </div>
     </div>
@@ -398,23 +519,24 @@
     let currentLang = 'fa';
     let currentStation = null;
     let activeTabId = 'cat-all';
+    let draggedStationId = null;
+    let isExplicitStop = false;
 
-    // Localization vocabulary
     const i18n = {
         fa: {
             appTitle: '<i class="fa-solid fa-radio"></i> نوا',
-            noStation: 'کانالی انتخاب نشده است',
-            selectStation: 'انتخاب کانال برای پخش...',
+            noStation: '<i class="fa-solid fa-compact-disc"></i> کانالی انتخاب نشده است',
+            selectStation: '<i class="fa-solid fa-circle-info"></i> انتخاب کانال برای پخش...',
             statusReady: 'آماده',
             statusBuffering: 'در حال بافر...',
             statusPlaying: 'زنده',
             statusPaused: 'متوقف شد',
             statusError: 'خطای اتصال!',
-            metaConnecting: 'در حال برقراری ارتباط...',
-            metaBuffering: 'در حال دریافت داده‌های صوتی...',
-            metaPlaying: 'در حال پخش استریم زنده...',
-            metaError: 'برقراری ارتباط با استریم صوتی ناموفق بود (آدرس منبع را بررسی کنید).',
-            metaPlayingTrack: 'در حال پخش: ',
+            metaConnecting: '<i class="fa-solid fa-spinner fa-spin"></i> در حال برقراری ارتباط...',
+            metaBuffering: '<i class="fa-solid fa-ellipsis fa-bounce"></i> در حال دریافت داده‌های صوتی...',
+            metaPlaying: '<i class="fa-solid fa-wave-square"></i> در حال پخش استریم زنده...',
+            metaError: '<i class="fa-solid fa-triangle-exclamation"></i> برقراری ارتباط با استریم صوتی ناموفق بود (آدرس منبع را بررسی کنید).',
+            metaPlayingTrack: '<i class="fa-solid fa-music fa-beat-fade"></i> در حال پخش: ',
             allChannels: 'همه کانال‌ها',
             radioNational: 'موسیقی',
             uncategorized: 'دسته‌بندی نشده',
@@ -428,34 +550,35 @@
             catFormTitle: '<i class="fa-solid fa-folder-plus"></i> افزودن دسته جدید',
             catNamePlaceholder: 'نام دسته (مثلاً: ورزشی، موزیک)',
             catSaveBtn: 'ذخیره دسته',
-            backupFormTitle: '<i class="fa-solid fa-floppy-disk"></i> پشتیبان‌گیری از اطلاعات',
-            exportBtn: '<i class="fa-solid fa-download" style="color:var(--success-color);"></i> دانلود فایل پشتیبان',
-            importBtn: '<i class="fa-solid fa-upload" style="color:var(--accent-color);"></i> بارگذاری فایل پشتیبان',
+            backupFormTitle: '<i class="fa-solid fa-database"></i> پشتیبان‌گیری از اطلاعات',
+            exportBtn: '<i class="fa-solid fa-cloud-arrow-down" style="color:var(--success-color);"></i> دانلود فایل پشتیبان',
+            importBtn: '<i class="fa-solid fa-cloud-arrow-up" style="color:var(--accent-color);"></i> بارگذاری فایل پشتیبان',
             alertFillFields: 'تکمیل فیلدهای نام فرکانس و آدرس منبع الزامی است.',
             alertBackupSuccess: 'داده‌های پشتیبان با موفقیت بازیابی و اعمال شدند.',
             alertBackupInvalid: 'ساختار فایل انتخاب‌شده معتبر نیست.',
             alertBackupError: 'خطا در بارگذاری فایل. لطفاً از صحت فرمت داده‌ها اطمینان حاصل کنید.',
             alertSelectChannel: 'لطفاً ابتدا فرکانس مورد نظر خود را از لیست انتخاب کنید.',
-            confirmDelCat: 'هشدار سیستم:\nآیا از حذف مجموعه {name} اطمینان دارید؟\nبا تایید این عملیات، ایستگاه‌های زیرمجموعه آن حذف نشده و به بخش "دسته‌بندی نشده" منتقل خواهند شد.',
+            confirmDelCat: 'هشدار سیستم:\nآیا از حذف مجموعه {name} اطمینان دارید\nبا تایید این عملیات، ایستگاه‌های زیرمجموعه آن حذف نشده و به بخش "دسته‌بندی نشده" منتقل خواهند شد.',
             confirmDelChan: 'تایید حذف ایستگاه:\nآیا مایلید فرکانس رادیویی {name} را برای همیشه از لیست شبکه‌ها حذف کنید؟\nاین عملیات غیرقابل بازگشت است.',
             toolTipEdit: 'ویرایش فرکانس',
             toolTipDelete: 'حذف فرکانس',
-            toolTipDelCat: 'حذف دسته'
+            toolTipDelCat: 'حذف دسته',
+            toolTipDrag: 'کشیدن برای جابجایی ترتیب'
         },
         en: {
             appTitle: '<i class="fa-solid fa-radio"></i> Nava',
-            noStation: 'No Channel Selected',
-            selectStation: 'Select a channel to play...',
+            noStation: '<i class="fa-solid fa-compact-disc"></i> No Channel Selected',
+            selectStation: '<i class="fa-solid fa-circle-info"></i> Select a channel to play...',
             statusReady: 'Ready',
             statusBuffering: 'Buffering...',
             statusPlaying: 'Live',
             statusPaused: 'Paused',
             statusError: 'Error!',
-            metaConnecting: 'Connecting...',
-            metaBuffering: 'Receiving audio data...',
-            metaPlaying: 'Streaming live content...',
-            metaError: 'Connection to stream failed (Check URL resource).',
-            metaPlayingTrack: 'Now Playing: ',
+            metaConnecting: '<i class="fa-solid fa-spinner fa-spin"></i> Connecting...',
+            metaBuffering: '<i class="fa-solid fa-ellipsis fa-bounce"></i> Receiving audio data...',
+            metaPlaying: '<i class="fa-solid fa-wave-square"></i> Streaming live content...',
+            metaError: '<i class="fa-solid fa-triangle-exclamation"></i> Connection to stream failed (Check URL resource).',
+            metaPlayingTrack: '<i class="fa-solid fa-music fa-beat-fade"></i> Now Playing: ',
             allChannels: 'All Channels',
             radioNational: 'Music',
             uncategorized: 'Uncategorized',
@@ -469,9 +592,9 @@
             catFormTitle: '<i class="fa-solid fa-folder-plus"></i> Add New Category',
             catNamePlaceholder: 'Category Name (e.g. News, Music)',
             catSaveBtn: 'Save Category',
-            backupFormTitle: '<i class="fa-solid fa-floppy-disk"></i> Backup & Restore',
-            exportBtn: '<i class="fa-solid fa-download" style="color:var(--success-color);"></i> Download Backup',
-            importBtn: '<i class="fa-solid fa-upload" style="color:var(--accent-color);"></i> Upload Backup',
+            backupFormTitle: '<i class="fa-solid fa-database"></i> Backup & Restore',
+            exportBtn: '<i class="fa-solid fa-cloud-arrow-down" style="color:var(--success-color);"></i> Download Backup',
+            importBtn: '<i class="fa-solid fa-cloud-arrow-up" style="color:var(--accent-color);"></i> Upload Backup',
             alertFillFields: 'Channel name and stream URL fields are required.',
             alertBackupSuccess: 'Backup data successfully restored.',
             alertBackupInvalid: 'Invalid backup file structure.',
@@ -481,21 +604,21 @@
             confirmDelChan: 'Confirm Deletion:\nDo you want to permanently delete channel {name}?\nThis action cannot be undone.',
             toolTipEdit: 'Edit Channel',
             toolTipDelete: 'Delete Channel',
-            toolTipDelCat: 'Delete Category'
+            toolTipDelCat: 'Delete Category',
+            toolTipDrag: 'Drag to reorder'
         }
     };
 
-    // New configuration setting up Music instead of National Radios
     let categories = [
         { id: 'cat-all', nameFarsi: 'همه کانال‌ها', nameEnglish: 'All Channels' },
         { id: 'cat-1', nameFarsi: 'موسیقی', nameEnglish: 'Music' },
         { id: 'cat-2', nameFarsi: 'دسته‌بندی نشده', nameEnglish: 'Uncategorized' }
     ];
 
-    // Added Navahang and Dance Wave streams
     let stations = [
         { id: '1', name: 'نواهنگ', url: 'https://navairan.com/;stream.nsv', categoryId: 'cat-1', isFavorite: false },
-        { id: '2', name: 'Dance Wave', url: 'https://dancewave.online/dance.mp3', categoryId: 'cat-1', isFavorite: false }
+		{ id: '2', name: 'رادیو شادی', url: 'https://ice9.securenetsystems.net/SHADI', categoryId: 'cat-1', isFavorite: false },
+        { id: '3', name: 'Dance Wave', url: 'https://dancewave.online/dance.mp3', categoryId: 'cat-1', isFavorite: false }
     ];
 
     window.onload = function() {
@@ -519,6 +642,18 @@
         setupAudioListeners();
     };
 
+    function updateSliderFill(slider) {
+        if (!slider) return;
+        const min = slider.min || 0;
+        const max = slider.max || 100;
+        const value = slider.value || 0;
+        
+        let percentage = ((value - min) / (max - min)) * 100;
+        if (isNaN(percentage)) percentage = 0;
+
+        slider.style.background = `linear-gradient(to right, var(--accent-color) ${percentage}%, var(--slider-empty) ${percentage}%)`;
+    }
+
     function applyLanguageDOM() {
         const lang = currentLang;
         const dict = i18n[lang];
@@ -531,32 +666,47 @@
         }
         document.getElementById('chan-name').placeholder = dict.chanNamePlaceholder;
         document.getElementById('chan-url').placeholder = dict.chanUrlPlaceholder;
-        document.getElementById('chan-save-btn').innerText = dict.chanSaveBtn;
-        document.getElementById('cancel-chan-edit').innerText = dict.chanCancelEdit;
+        document.getElementById('chan-save-btn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> ` + dict.chanSaveBtn;
+        document.getElementById('cancel-chan-edit').innerHTML = `<i class="fa-solid fa-rotate-left"></i> ` + dict.chanCancelEdit;
         
         document.getElementById('cat-form-title').innerHTML = dict.catFormTitle;
         document.getElementById('category-name').placeholder = dict.catNamePlaceholder;
-        document.getElementById('cat-save-btn').innerText = dict.catSaveBtn;
+        document.getElementById('cat-save-btn').innerHTML = `<i class="fa-solid fa-plus"></i> ` + dict.catSaveBtn;
         
         document.getElementById('backup-form-title').innerHTML = dict.backupFormTitle;
         document.getElementById('export-btn').innerHTML = dict.exportBtn;
         document.getElementById('import-btn').innerHTML = dict.importBtn;
 
-        if (!currentStation) {
-            document.getElementById('track-title').innerText = dict.noStation;
-            document.getElementById('meta-text').innerText = dict.selectStation;
+        if (currentStation) {
+            if (audio.paused && !audio.src) {
+                document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc"></i> ` + currentStation.name;
+                document.getElementById('meta-text').innerHTML = dict.selectStation;
+            } else if (!audio.paused && audio.src) {
+                document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc fa-spin"></i> ` + currentStation.name;
+                document.getElementById('meta-text').innerHTML = dict.metaPlaying;
+            } else if (audio.paused && audio.src) {
+                document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc"></i> ` + currentStation.name;
+                document.getElementById('meta-text').innerHTML = dict.selectStation;
+            }
+        } else {
+            document.getElementById('track-title').innerHTML = dict.noStation;
+            document.getElementById('meta-text').innerHTML = dict.selectStation;
         }
+        
         document.getElementById('status-text').innerText = getStatusString();
 
         if (lang === 'en') {
-            document.dir = 'ltr';
+            document.documentElement.setAttribute('dir', 'ltr');
             document.documentElement.setAttribute('lang', 'en');
-            document.body.classList.add('ltr-mode');
         } else {
-            document.dir = 'rtl';
+            document.documentElement.setAttribute('dir', 'rtl');
             document.documentElement.setAttribute('lang', 'fa');
-            document.body.classList.remove('ltr-mode');
         }
+        
+        setTimeout(() => {
+            updateSliderFill(document.getElementById('volume-slider'));
+            updateSliderFill(document.getElementById('seek-slider'));
+        }, 30);
     }
 
     function toggleLang() {
@@ -691,18 +841,63 @@
         filteredStations.forEach(station => {
             const li = document.createElement('li');
             li.className = `station-item ${currentStation && currentStation.id === station.id ? 'active-playing' : ''}`;
+            li.dataset.id = station.id;
+
+            li.addEventListener('dragover', handleDragOver);
+            li.addEventListener('drop', handleDrop);
+
             li.innerHTML = `
                 <div class="station-info" onclick="selectStation('${station.id}')">
                     <i class="fa-solid fa-star fav-star ${station.isFavorite ? 'active' : ''}" onclick="toggleFavorite(event, '${station.id}')"></i>
                     <span>${station.name}</span>
                 </div>
                 <div class="item-actions">
-                    <button class="edit" onclick="editChannel('${station.id}')" title="${i18n[currentLang].toolTipEdit}"><i class="fa-solid fa-pen"></i></button>
-                    <button class="delete" onclick="deleteChannel('${station.id}')" title="${i18n[currentLang].toolTipDelete}"><i class="fa-solid fa-trash"></i></button>
+                    <button class="edit" onclick="editChannel('${station.id}')" title="${i18n[currentLang].toolTipEdit}"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="delete" onclick="deleteChannel('${station.id}')" title="${i18n[currentLang].toolTipDelete}"><i class="fa-solid fa-trash-can"></i></button>
+                    <div class="drag-handle" draggable="true" title="${i18n[currentLang].toolTipDrag}">
+                        <i class="fa-solid fa-grip-vertical"></i>
+                    </div>
                 </div>
             `;
+
+            const handle = li.querySelector('.drag-handle');
+            handle.addEventListener('dragstart', (e) => handleDragStart(e, li));
+            handle.addEventListener('dragend', () => handleDragEnd(li));
+
             container.appendChild(li);
         });
+    }
+
+    function handleDragStart(e, rowElement) {
+        draggedStationId = rowElement.dataset.id;
+        e.dataTransfer.effectAllowed = 'move';
+        rowElement.style.opacity = '0.4';
+    }
+
+    function handleDragOver(e) {
+        if (e.preventDefault) { e.preventDefault(); }
+        e.dataTransfer.dropEffect = 'move';
+        return false;
+    }
+
+    function handleDrop(e) {
+        e.stopPropagation();
+        const targetStationId = this.dataset.id;
+        if (draggedStationId && draggedStationId !== targetStationId) {
+            const fromIndex = stations.findIndex(s => s.id === draggedStationId);
+            const toIndex = stations.findIndex(s => s.id === targetStationId);
+            if (fromIndex !== -1 && toIndex !== -1) {
+                const [movedStation] = stations.splice(fromIndex, 1);
+                stations.splice(toIndex, 0, movedStation);
+                saveToStorage();
+                renderStations();
+            }
+        }
+        return false;
+    }
+
+    function handleDragEnd(rowElement) {
+        rowElement.style.opacity = '1';
     }
 
     function saveCategory() {
@@ -715,6 +910,7 @@
         saveToStorage();
         renderTabs();
         updateCategorySelect();
+        document.getElementById('manage-panel').style.display = 'none';
     }
 
     function deleteCategory(event, catId) {
@@ -752,6 +948,7 @@
         saveToStorage();
         renderStations();
         resetChannelForm();
+        document.getElementById('manage-panel').style.display = 'none';
     }
 
     function editChannel(id) {
@@ -763,7 +960,7 @@
         document.getElementById('chan-url').value = station.url;
         document.getElementById('chan-category').value = station.categoryId;
         
-        document.getElementById('chan-form-title').innerText = i18n[currentLang].chanFormTitleEdit + station.name;
+        document.getElementById('chan-form-title').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> ` + i18n[currentLang].chanFormTitleEdit + station.name;
         document.getElementById('cancel-chan-edit').style.display = "inline-block";
         document.getElementById('manage-panel').style.display = 'flex';
     }
@@ -778,10 +975,7 @@
         saveToStorage();
         renderStations();
         if (currentStation && currentStation.id === id) {
-            audio.src = '';
-            document.getElementById('track-title').innerText = i18n[currentLang].noStation;
-            updateStatus('ready');
-            document.getElementById('meta-text').innerText = i18n[currentLang].selectStation;
+            stopPlayback();
         }
     }
 
@@ -791,6 +985,7 @@
         document.getElementById('chan-url').value = '';
         document.getElementById('chan-form-title').innerHTML = i18n[currentLang].chanFormTitle;
         document.getElementById('cancel-chan-edit').style.display = "none";
+        document.getElementById('manage-panel').style.display = 'none';
     }
 
     function toggleFavorite(event, id) {
@@ -804,40 +999,91 @@
         if (!station) return;
 
         currentStation = station;
-        document.getElementById('track-title').innerText = station.name;
-        document.getElementById('meta-text').innerText = i18n[currentLang].metaConnecting;
+        document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc fa-spin"></i> ` + station.name;
+        document.getElementById('meta-text').innerHTML = i18n[currentLang].metaConnecting;
+        
+        isExplicitStop = false;
         audio.src = station.url;
+        audio.load();
         
         renderStations(); 
-        audio.play().catch(() => updateStatus('error'));
+        audio.play().catch(() => { if(!isExplicitStop) updateStatus('error'); });
     }
 
     function togglePlayback() {
-        if(!audio.src) { alert(i18n[currentLang].alertSelectChannel); return; }
-        if(audio.paused) { audio.play().catch(() => updateStatus('error')); } else { audio.pause(); }
+        if(!currentStation) { alert(i18n[currentLang].alertSelectChannel); return; }
+        
+        if(!audio.src || audio.src === window.location.href || isExplicitStop) {
+            isExplicitStop = false;
+            audio.src = currentStation.url;
+            audio.load();
+            document.getElementById('meta-text').innerHTML = i18n[currentLang].metaConnecting;
+            updateStatus('loading');
+            audio.play().catch(() => { if(!isExplicitStop) updateStatus('error'); });
+            return;
+        }
+        
+        if(audio.paused) { isExplicitStop = false; audio.play().catch(() => { if(!isExplicitStop) updateStatus('error'); }); } else { audio.pause(); }
     }
 
-    function seekAudio(value) { audio.currentTime = value; }
+    function stopPlayback() {
+        isExplicitStop = true;
+        audio.pause();
+        audio.removeAttribute('src');
+        audio.load();
+        updateStatus('ready');
+        document.getElementById('master-play-btn').innerHTML = '<i class="fa-solid fa-play"></i>';
+        document.getElementById('time-current').innerText = "00:00";
+        document.getElementById('time-duration').innerText = "00:00";
+        
+        const seek = document.getElementById('seek-slider');
+        seek.value = 0;
+        seek.max = 0;
+        updateSliderFill(seek);
+        
+        if(currentStation) {
+            document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc"></i> ` + currentStation.name;
+            document.getElementById('meta-text').innerHTML = i18n[currentLang].selectStation;
+        } else {
+            document.getElementById('track-title').innerHTML = i18n[currentLang].noStation;
+            document.getElementById('meta-text').innerHTML = i18n[currentLang].selectStation;
+        }
+    }
+
+    function seekAudio(value) { 
+        if(audio.src && isFinite(audio.duration)) {
+            audio.currentTime = value; 
+        }
+    }
 
     function changeVolume(val) {
         audio.volume = val;
         audio.muted = (val == 0);
         updateMuteIcon();
+        updateSliderFill(document.getElementById('volume-slider'));
     }
 
-    function toggleMute() { audio.muted = !audio.muted; updateMuteIcon(); }
+    function toggleMute() { 
+        audio.muted = !audio.muted; 
+        updateMuteIcon();
+    }
 
     function updateMuteIcon() {
         const icon = document.getElementById('mute-btn').querySelector('i');
+        const volSlider = document.getElementById('volume-slider');
+        
         if (audio.muted || audio.volume == 0) {
             icon.className = "fa-solid fa-volume-xmark";
             document.getElementById('mute-btn').style.background = "var(--danger-color)";
+            document.getElementById('mute-btn').style.borderColor = "var(--danger-color)";
             document.getElementById('mute-btn').style.color = "white";
         } else {
             icon.className = "fa-solid fa-volume-high";
-            document.getElementById('mute-btn').style.background = "var(--border-color)";
-            document.getElementById('mute-btn').style.color = "var(--text-color)";
+            document.getElementById('mute-btn').style.background = "var(--card-color)";
+            document.getElementById('mute-btn').style.borderColor = "var(--border-color)";
+            document.getElementById('mute-btn').style.color = "var(--text-muted)";
         }
+        updateSliderFill(volSlider);
     }
 
     function updateStatus(state) {
@@ -859,41 +1105,69 @@
         return `${m}:${s}`;
     }
 
-    // HTML5 core stream processing events listener
     function setupAudioListeners() {
-        audio.addEventListener('timeupdate', () => {
-            document.getElementById('time-current').innerText = formatTime(audio.currentTime);
-            document.getElementById('seek-slider').value = audio.currentTime;
+	audio.addEventListener('timeupdate', () => {
+            if(isFinite(audio.duration) && audio.duration > 0 && audio.duration !== Infinity) {
+                document.getElementById('time-current').innerText = formatTime(audio.currentTime);
+                const seek = document.getElementById('seek-slider');
+                seek.value = audio.currentTime;
+                updateSliderFill(seek);
+            }
         });
 
-        audio.addEventListener('durationchange', () => {
-            document.getElementById('seek-slider').max = audio.duration;
-            document.getElementById('time-duration').innerText = formatTime(audio.duration);
+		audio.addEventListener('durationchange', () => {
+            const seek = document.getElementById('seek-slider');
+            // بررسی اینکه آیا زمان مشخص است و استریم لایوِ مطلق نیست
+            if(isFinite(audio.duration) && audio.duration > 0 && audio.duration !== Infinity) {
+                seek.max = audio.duration;
+                document.getElementById('time-duration').innerText = formatTime(audio.duration);
+                seek.disabled = false; // فعال کردن اسلایدر
+                seek.style.opacity = "1";
+            } else {
+                // اگر استریم زنده مطلق بود (مثل رادیو شادی)
+                seek.max = 0;
+                seek.value = 0;
+                document.getElementById('time-current').innerText = "00:00";
+                document.getElementById('time-duration').innerText = "LIVE"; // نمایش کلمه زنده
+                seek.disabled = true; // غیرفعال کردن اسلایدر عقب و جلو
+                seek.style.opacity = "0.5"; // کمرنگ کردن اسلایدر برای درک کاربر
+            }
+            updateSliderFill(seek);
         });
 
         audio.addEventListener('waiting', () => {
             updateStatus('loading');
-            document.getElementById('meta-text').innerText = i18n[currentLang].metaBuffering;
+            document.getElementById('meta-text').innerHTML = i18n[currentLang].metaBuffering;
         });
         
         audio.addEventListener('playing', () => {
             updateStatus('playing');
             document.getElementById('master-play-btn').innerHTML = '<i class="fa-solid fa-pause"></i>';
-            const currentMeta = document.getElementById('meta-text').innerText;
+            if (currentStation) {
+                document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc fa-spin"></i> ` + currentStation.name;
+            }
+            const currentMeta = document.getElementById('meta-text').innerHTML;
             if(currentMeta === i18n.fa.metaBuffering || currentMeta === i18n.en.metaBuffering || currentMeta === i18n.fa.metaConnecting || currentMeta === i18n.en.metaConnecting) {
-                document.getElementById('meta-text').innerText = i18n[currentLang].metaPlaying;
+                document.getElementById('meta-text').innerHTML = i18n[currentLang].metaPlaying;
             }
         });
 
         audio.addEventListener('pause', () => {
-            updateStatus('ready');
-            document.getElementById('master-play-btn').innerHTML = '<i class="fa-solid fa-play"></i>';
+            if(audio.src && !isExplicitStop) {
+                updateStatus('ready');
+                document.getElementById('master-play-btn').innerHTML = '<i class="fa-solid fa-play"></i>';
+                if (currentStation) {
+                    document.getElementById('track-title').innerHTML = `<i class="fa-solid fa-compact-disc"></i> ` + currentStation.name;
+                }
+            }
         });
 
         audio.addEventListener('error', () => {
+            if (isExplicitStop) return;
+
             updateStatus('error');
             document.getElementById('master-play-btn').innerHTML = '<i class="fa-solid fa-play"></i>';
-            document.getElementById('meta-text').innerText = i18n[currentLang].metaError;
+            document.getElementById('meta-text').innerHTML = i18n[currentLang].metaError;
         });
 
         if ('mediaSession' in navigator) {
@@ -903,7 +1177,7 @@
                     const title = navigator.mediaSession.metadata.title || "";
                     const artist = navigator.mediaSession.metadata.artist || "";
                     if(title || artist) {
-                        document.getElementById('meta-text').innerText = `${i18n[currentLang].metaPlayingTrack}${title} ${artist ? ' - ' + artist : ''}`;
+                        document.getElementById('meta-text').innerHTML = `${i18n[currentLang].metaPlayingTrack}${title} ${artist ? ' - ' + artist : ''}`;
                     }
                 }
             };

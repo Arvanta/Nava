@@ -1117,20 +1117,18 @@
 
 		audio.addEventListener('durationchange', () => {
             const seek = document.getElementById('seek-slider');
-            // بررسی اینکه آیا زمان مشخص است و استریم لایوِ مطلق نیست
             if(isFinite(audio.duration) && audio.duration > 0 && audio.duration !== Infinity) {
                 seek.max = audio.duration;
                 document.getElementById('time-duration').innerText = formatTime(audio.duration);
-                seek.disabled = false; // فعال کردن اسلایدر
+                seek.disabled = false; 
                 seek.style.opacity = "1";
             } else {
-                // اگر استریم زنده مطلق بود (مثل رادیو شادی)
                 seek.max = 0;
                 seek.value = 0;
                 document.getElementById('time-current').innerText = "00:00";
                 document.getElementById('time-duration').innerText = "LIVE"; // نمایش کلمه زنده
-                seek.disabled = true; // غیرفعال کردن اسلایدر عقب و جلو
-                seek.style.opacity = "0.5"; // کمرنگ کردن اسلایدر برای درک کاربر
+                seek.disabled = true; 
+                seek.style.opacity = "0.5"; 
             }
             updateSliderFill(seek);
         });
